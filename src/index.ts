@@ -9,25 +9,25 @@ import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
 
 const main = async () => {
-  
-  const PORT = app.get("PORT");
 
-  const orm = await MikroORM.init(mikroConfig);
-  await orm.getMigrator().up();
+	const PORT = app.get("PORT");
 
-  const apolloServer = new ApolloServer({
-    schema: await buildSchema({
-      resolvers: [HelloResolver, PostResolver, UserResolver],
-      validate: false,
-    }),
-    context: () => ({ em: orm.em }),
-  });
+	const orm = await MikroORM.init(mikroConfig);
+	await orm.getMigrator().up();
 
-  apolloServer.applyMiddleware({ app });
+	const apolloServer = new ApolloServer({
+		schema: await buildSchema({
+			resolvers: [HelloResolver, PostResolver, UserResolver],
+			validate: false,
+		}),
+		context: () => ({ em: orm.em }),
+	});
 
-  app.listen(PORT, () => {
-    console.log(`API GraphQL started on http://localhost:${PORT}/graphql`);
-  });
+	apolloServer.applyMiddleware({ app });
+
+	app.listen(PORT, () => {
+		console.log(`API GraphQL started on http://localhost:${PORT}/graphql`);
+	});
 
 };
 
